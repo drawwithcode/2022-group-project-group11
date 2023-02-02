@@ -1,8 +1,269 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  background-image: linear-gradient(#6aa5a9, #7ec384);
+  color: white;
+  overflow: hidden;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Libre+Bodoni:wght@700&family=Montserrat:wght@400;700&display=swap");
+
+/* @font-face {
+  font-family: montserratMedium;
+  src: url(assets/Montserrat-Medium.ttf);
+}
+
+@font-face {
+  font-family: montserratBold;
+  src: url(assets/Montserrat-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: abrilFatface;
+  src: url(assets/AbrilFatface-Regular.ttf);
+} */
+
+h1 {
+  font-family: "Libre Bodoni", serif;
+  font-weight: bold;
+  font-size: 8rem;
+  text-align: center;
+  line-height: 8rem;
+  width: 80%;
+  padding: 0% 10%;
+}
+
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 5rem;
+  text-align: center;
+}
+
+h3 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  text-align: center;
+}
+
+p {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 2.5rem;
+  text-align: center;
+  width: 80%;
+  padding: 0% 10%;
+}
+
+.caption {
+  font-size: 2.5rem;
+  width: 80%;
+  padding: 0 10%;
+}
+
+#intro {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+}
+
+#instructions {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#confermation {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#legenda {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#textbox {
+  width: 90%;
+  margin-top: 25%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2px 0;
+  display: block;
+  background-color: white;
+  color: #7ec384;
+  border-radius: 20px;
+}
+
+#phrase {
+  width: 90%;
+  padding: 0 5%;
+}
+
+button {
+  border: 7px solid white;
+  border-radius: 35px;
+  width: 25%;
+  display: inline-block;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  text-align: center;
+  padding: 10px 0;
+}
+
+#retry {
+  background-color: transparent;
+  color: white;
+  margin-right: 9%;
+  margin-left: 15%;
+}
+
+#enter {
+  background-color: white;
+  color: #7ec384;
+  margin-right: 15%;
+  margin-left: 9%;
 }
 
 canvas {
   display: block;
+  position: absolute;
+}
+
+#speech {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#speech p {
+  margin-top: 30%;
+}
+
+#reverse {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#recap {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+.colors {
+  display: inline-block;
+  height: 7%;
+  width: 40%;
+  padding: 0;
+  margin-top: 3%;
+  margin-bottom: 3%;
+  font-weight: 700;
+  border-radius: 50px;
+  border-width: 20px;
+  border-style: solid;
+  text-align: center;
+}
+
+.colorLines {
+  width: 100%;
+}
+
+#info {
+  background-color: white;
+  color: #7ec384;
+  margin-left: 76%;
+  font-weight: 700;
+  margin-top: 4%;
+  font-size: 1.75rem;
+  padding: 0;
+  width: 20%;
+}
+
+#translation {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#recording {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+#recordInstructions {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+  margin-top: 20%;
+}
+
+#confirm {
+  background-color: white;
+  color: #7ec384;
+  margin-right: 15%;
+  margin-left: 9%;
+  position: absolute;
+}
+
+#mapSketch {
+  width: 100%;
+  height: 100%;
+  display: block;
+  visibility: hidden;
+  position: absolute;
+}
+
+select {
+  color: #7ec384;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  font-family: "Montserrat";
+  font-weight: 700;
+  padding: 0.5rem;
+  border-color: "#FFFFFF";
+}
+
+#start {
+  background-color: white;
+  color: #7ec384;
+  margin-right: auto;
+  margin-left: auto;
+  position: absolute;
 }
