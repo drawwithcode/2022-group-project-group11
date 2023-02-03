@@ -45,11 +45,11 @@ function nextFrame() {
     console.log(frame);
     frame++;
   } else if (frame == 3) {
+    startFrame4();
     document.getElementById("speech").style.visibility = "hidden";
     document.getElementById("confermation").style.visibility = "visible";
     frame++;
   } else if (frame == 4) {
-    startFrame4();
     document.getElementById("confermation").style.display = "none";
     document.getElementById("map").style.visibility = "visible";
     frame++;
