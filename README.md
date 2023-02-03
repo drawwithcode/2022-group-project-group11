@@ -49,7 +49,8 @@ The device will need to have touch functionalities and a microphone of course, b
 
 # STRUCTURE
 
-![scheme](./assets/readme/struttura.png)
+![scheme](./assets/readme/Scheme.png)
+![scheme](./assets/readme/struttura_1.png)
 
 Here is a scheme of the project and its concept rendition.
 
@@ -146,15 +147,291 @@ This is how the two libraries work together
 
 **ANIMATIONS**
 
-To show the transformation of the original phrase into a vector, we applied a simple sliding animation, using some rectangles with rounded angles
+For the world map animations we needed to keep track of the various selected languages and the order of the continents
 
 ```JavaScript
+
+//This next array will contain all the languages (in order) written in a way that the Translation API can interpret
+
+
+let langs = ["en", "en", "en", "en", "en"],
+  shownTranslations = 1;
+
+//Arrays containing every continent's selection menu coordinates (x and y), a boolean parameter to keep track of the
+//lines already drawn and an int that will be used for the order
+
+
+let csels = [75, 450, false];
+let cselsa = [150, 625, false];
+let cseleu = [325, 425, false];
+let cselaf = [375, 600, false];
+let cselas = [575, 475, false];
+
+//Array that will keep track of the order in which the continents are visited
+
+
+let route = ["sels"];
+
+//Dictionary to keep track of the specific languages for every step of the route
+
+let places = {
+  0: "English",
+  1: "English",
+  2: "English",
+  3: "English",
+  4: "English",
+};
+
+//Dictionary to keep track of the specific languages for every step of the route
+
+let current = [csels[0], csels[1]];
+let next = [csels[0], csels[1]];
+
+//Counter that will be needed to allocate every continent into their spot in the places dictionary
+
+let order = 0;
+
+var languageSketch = function (sketch) {
+  let map;
+
+  sketch.preload = function () {
+//Preloading of the background image
+
+    map = sketch.loadImage("assets/map.png");
+  };
+
+//Creating the select menu for North America (starting point, always English)
+
+
+let sels = sketch.createSelect();
+    sels.parent("map");
+    sels.position(csels[0], csels[1]);
+    sels.option("English");
+
+//Creating the select menu for South America
+
+    let selsa = sketch.createSelect();
+    selsa.parent("map");
+    selsa.position(cselsa[0], cselsa[1]);
+    selsa.option("---"); //The options get added
+    selsa.option("Spanish");
+    selsa.option("Portuguese");
+    selsa.option("French");
+    selsa.option("Dutch");
+    selsa.selected("---"); //The menu will display by default the null option
+
+    selsa.changed(function () { //When the null option gets modified into any of the other options this happens
+      next = [cselsa[0], cselsa[1]]; //The continent gets identified as the final point of the line
+
+      if (cselsa[2] == false) { //If the line hasn't already been drawn this happens
+
+        cselsa[2] = true; //This prevents the line from being drawn again towards this continent in the future
+
+        sketch.append(route, "selsa"); //The continent gets added as the next step in our route
+
+        cselsa[3] = order + 1; //The fouth element of the coordinates array is changed to the spot this continent has in the order of the route (+1 since english is always the first step)
+
+        places[order + 1] = selsa.value(); //The dictionary that keeps track of the language at every step of the route is updated with the one selected
+
+        sketch.mySelect(); //The line gets drawn by the mySelect function (it is separated from the arrow function for debugging purposes)
+
+      } else if (csels[2] == false) { //If the line has already been drawn this happens
+
+        places[cselsa[3]] = selsa.value(); //The dictionary is updated, without relying on the order counter, that could be already at 4
+
+      }
+
+      selsa.disable("---"); //The null option gets disabled to not cause confusion
+
+    });
+
+//Creating the select menu for Europe, Africa and Asia (seleu, selaf and selas) and of course the process is the same for every one of them
+
+    [...]
+
+//Creating the button used to confirm
+
+
+    button = sketch.createButton("Start");
+    button.id("start");
+    button.parent("map");
+    button.position(sketch.width / 2 - button.width / 2, sketch.height - 250);
+    button.mousePressed(function () { //When pressed this happens
+
+      if (order >= 4 && csels[2] == false) { //If the order reached its last number and the final line hasn't been drawn yet
+
+        csels[2] = true; //We make sure the final line doesn't get drawn again
+
+        nextFrame(); //We advance to the next screen
+
+        sketch.confirm(); //The confirm function executes the final part of this section and sets up the second map segment
+      }
+
+//During the last part we hide all the menus but the first and the last
+
+      if (csels[2] == true) {
+        if (route[1] == "selsa" || route[2] == "selsa" || route[3] == "selsa") {
+          selsa.hide();
+        }
+
+        if (route[1] == "seleu" || route[2] == "seleu" || route[3] == "seleu") {
+          seleu.hide();
+        }
+
+        if (route[1] == "selaf" || route[2] == "selaf" || route[3] == "selaf") {
+          selaf.hide();
+        }
+
+        if (route[1] == "selas" || route[2] == "selas" || route[3] == "selas") {
+          selas.hide();
+        }
+      }
+    });
+  };
+  sketch.draw = function () {};
+
+  sketch.mySelect = function () { //If not all menus have been used yet we draw arrows
+
+    if (order < 4) {
+      sketch.arrow();
+    }
+  };
+
+  sketch.arrow = function () {
+
+//We increment the order counter, to prepare for the next step
+
+    order++;
+
+//We create a variable used to create the curve of the lines
+
+    let curve = 50;
+    if (order % 2 == 0) { //The curvature is alternated
+      curve = -50;
+    }
+
+    sketch.push();
+
+//We draw a Bezier curve, that will be our line
+
+    sketch.noFill();
+    sketch.strokeWeight(4);
+    sketch.stroke(255, 255, 255);
+    sketch.drawingContext.setLineDash([5, 10]);
+    sketch.bezier(
+      current[0] + 40,
+      current[1] + 10,
+      sketch.lerp(current[0], next[0], 0.25) + curve,
+      sketch.lerp(current[1], next[1], 0.25) + curve,
+      sketch.lerp(current[0], next[0], 0.75) + curve,
+      sketch.lerp(current[1], next[1], 0.75) + curve,
+      next[0] + 40,
+      next[1] + 10
+    );
+    sketch.pop();
+
+//We identify the last point of the curve as the new starting point
+
+    current = [next[0], next[1]];
+  };
+
+  sketch.confirm = function () { //The last part of this section
+    sketch.clear();
+    sketch.background(map);
+
+//We identify the first menu as our final point
+
+    next = [csels[0], csels[1]];
+
+//We draw a Bezier curve
+
+[...]
+
+//We then translate every language in the places dictionary into the form used by the Translation API
+
+    for (let i = 1; i < 5; i++) {
+      if (places[i] == "Spanish") {
+        langs[i] = "es";
+      } else if (places[i] == "Portuguese") {
+        langs[i] = "pt";
+      } else if (places[i] == "French") {
+        langs[i] = "fr";
+      } else if (places[i] == "Dutch") {
+        langs[i] = "nl";
+      } else if (places[i] == "Italian") {
+        langs[i] = "it";
+      } else if (places[i] == "German") {
+        langs[i] = "de";
+      } else if (places[i] == "Greek") {
+        langs[i] = "el";
+      } else if (places[i] == "Russian") {
+        langs[i] = "ru";
+      } else if (places[i] == "Arabic") {
+        langs[i] = "ar";
+      } else if (places[i] == "Afrikaans") {
+        langs[i] = "af";
+      } else if (places[i] == "Swahili (Latin)") {
+        langs[i] = "sw";
+      } else if (places[i] == "Chinese simpl") {
+        langs[i] = "zh-Hans";
+      } else if (places[i] == "Hindi") {
+        langs[i] = "hi";
+      } else if (places[i] == "Japanese") {
+        langs[i] = "ja";
+      } else if (places[i] == "Indonesian") {
+        langs[i] = "id";
+      } else if (places[i] == "Zulu") {
+        langs[i] = "zu";
+      }
+    }
+  }
 
 ```
 
-For the world map animations, we used a sligtly more complex system, mostly just beacuse of the need of keeping track fo the various selected languages
+To show the transformation of the original phrase into a vector, we applied a simple sliding animation, using some rectangles with rounded angles.
+This next section is all in the draw() function.
 
 ```JavaScript
+
+if (opacity <= 300) {
+      for (let k = 0; k < shapes.length; k++) {
+
+        shapes[k].create(); //We create an instance of the segment of the vector
+
+      }
+      opacity++; //It fades in
+
+    } else if (h < 60) { //A timer that sets the segment to max opacity
+      alpha = 255;
+      for (let l = 0; l < shapes.length; l++) {
+        shapes[l].create(); //The segments change color, according to Rita.js' analysis
+      }
+      h++; //"Timer"
+
+      document.getElementById("analized").style.visibility = "hidden";
+      document.getElementById("comments").innerHTML = "Adding a context to each word";
+
+    } else if (opacity2 <= 300) { //A timer that sets the segment to max color
+      colored = true;
+      alpha = 5;
+
+      setTimeout(function () {
+        for (let n = 0; n < shapes.length; n++) {
+          shapes[n].create(); //The segments increase in size, "absorbing" the words
+        }
+        opacity2++;
+        if (opacity2 > 50 && opacity2 < 200) {
+          alpha = 10;
+        } else if (opacity2 > 200) {
+          alpha = 5;
+        }
+        document.getElementById("comments").innerHTML = "Saving the informations";
+      }, 2000);
+      animationEnded = true;
+    } else if (animationEnded == true) {
+      sketch.showingTranslation(); //The translations in various langages get shown
+      animationEnded = false;
+    }
 
 ```
 
