@@ -36,7 +36,11 @@
         <p>Select a language for each continent and watch your sentence get translated and change shape.</p>
       </div>
     </div>
-    <div onclick="nextFrame()">
+    <div
+      onclick="if(!(open && frame == 6)){
+      nextFrame();
+    } "
+    >
       <div id="legenda">
         <div><h3 style="margin-top: 13%; margin-bottom: 8%">COLOR LEGEND</h3></div>
         <div class="colorLines">
@@ -71,24 +75,22 @@
       </div>
     </div>
     <div id="map"></div>
+    <div id="animation"></div>
     <div id="translation">
       <button type="button" id="info" onclick="openLegend()">Legend</button>
-      <div id="translationAnimation">
-        <div id="fistLanguage">
-          <div style="margin-top: 7%; margin-bottom: 0"><h3>ENGLISH</h3></div>
-          <div><p id="starting" style="margin-top: 7%">phrase to see how it gets aligned</p></div>
-          <div><p id="analized" style="margin-top: 7%">phrase to see how it gets aligned</p></div>
-          <div><p id="comments" style="margin-top: 40%">Analising your sentence</p></div>
-        </div>
-        <div id="secondLanguage" onclick="nextFrame()">
-          <div id="language" style="margin-top: 7%; margin-bottom: 0"><h3>LANGUAGE</h3></div>
-          <div><p id="translated" style="margin-top: 5%">phrase to see how it gets aligned</p></div>
-        </div>
+      <div id="fistLanguage">
+        <div style="margin-top: 10%; margin-bottom: 0"><h3>ENGLISH</h3></div>
+        <div><p id="starting" style="margin-top: 7%; text-align: left"></p></div>
+        <div><p id="analized" style="margin-top: 7%; text-align: left; line-height: 100px; vertical-align: text-top"></p></div>
+        <div><p id="comments" style="margin-top: 10%">Analising your sentence</p></div>
+      </div>
+      <div id="secondLanguage" onclick="nextFrame()">
+        <div id="language"><h3 style="margin-top: 10%; margin-bottom: 0; text-transform: uppercase">LANGUAGE</h3></div>
+        <div><p id="translated" style="margin-top: 7%"></p></div>
       </div>
     </div>
-    <div id="animation"></div>
     <div id="reverse" onclick="nextFrame()">
-      <div style="margin-top: 35%"><h3 id="language1">LANGUAGE</h3></div>
+      <div><h3 id="language1" style="margin-top: 35%; text-transform: uppercase">LANGUAGE</h3></div>
       <div><p id="phrase1">phrase that has been transalted</p></div>
 
       <div style="margin-top: 30%"><h3 id="language2">ENGLISH</h3></div>

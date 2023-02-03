@@ -2,6 +2,7 @@ const translate_api_endpoint = "https://api.cognitive.microsofttranslator.com";
 let translate_api_key = "fabd1ff9c0e94348ab8e9dcbb0c28444";
 const translate_version = "3.0";
 const translate_region = "switzerlandnorth";
+let phrase = "";
 
 async function microsoft_translate(source_text, source_language, target_language) {
   const endpoint = `${translate_api_endpoint}/translate?api-version=${translate_version}&from=${source_language}&to=${target_language}`; // Constructing the URL to send to
@@ -25,7 +26,8 @@ let frame = 0,
   open = false,
   translatedPhrases = [],
   analysis,
-  phrase;
+  startCheck,
+  animationEnded = false;
 
 function nextFrame() {
   if (frame == 0) {
@@ -37,6 +39,7 @@ function nextFrame() {
     document.getElementById("legenda").style.visibility = "visible";
     frame++;
   } else if (frame == 2) {
+    startFrame2();
     document.getElementById("legenda").style.visibility = "hidden";
     document.getElementById("speech").style.visibility = "visible";
     console.log(frame);
@@ -46,11 +49,13 @@ function nextFrame() {
     document.getElementById("confermation").style.visibility = "visible";
     frame++;
   } else if (frame == 4) {
+    startFrame4();
     document.getElementById("confermation").style.display = "none";
     document.getElementById("map").style.visibility = "visible";
     frame++;
   } else if (frame == 5) {
     console.log(frame);
+    startFrame5();
     document.getElementById("map").style.visibility = "hidden";
     document.getElementById("start").style.display = "none";
     document.getElementById("translation").style.visibility = "visible";
@@ -84,12 +89,16 @@ function oldFrame() {
 function openLegend() {
   if (open == false) {
     open = true;
-    document.getElementById("translationAnimation").style.visibility = "hidden";
+    document.getElementById("legenda").removeEventListener("click", nextFrame);
+    document.getElementById("animation").style.visibility = "hidden";
+    document.getElementById("translation").style.visibility = "hidden";
     document.getElementById("legenda").style.visibility = "visible";
     document.getElementById("info").innerHTML = "Close";
+    document.getElementById("info").style.visibility = "visible";
   } else {
     open = false;
-    document.getElementById("translationAnimation").style.visibility = "visible";
+    document.getElementById("animation").style.visibility = "visible";
+    document.getElementById("translation").style.visibility = "visible";
     document.getElementById("legenda").style.visibility = "hidden";
     document.getElementById("info").innerHTML = "Legend";
   }
@@ -174,33 +183,35 @@ var recordSketch = function (sketch) {
     }
   };
 };
+function startFrame2() {
+  new p5(recordSketch);
+}
 
-new p5(recordSketch);
+let langs = ["en", "en", "en", "en", "en"],
+  shownTranslations = 1;
 
-let langs = ["en", "en", "en", "en", "en"];
+let csels = [75, 450, false];
+let cselsa = [150, 625, false];
+let cseleu = [325, 425, false];
+let cselaf = [375, 600, false];
+let cselas = [575, 475, false];
+
+let route = ["sels"];
+let places = {
+  0: "English",
+  1: "English",
+  2: "English",
+  3: "English",
+  4: "English",
+};
+
+let current = [csels[0], csels[1]];
+let next = [csels[0], csels[1]];
+
+let order = 0;
 
 var languageSketch = function (sketch) {
   let map;
-
-  let csels = [75, 450, false];
-  let cselsa = [150, 625, false];
-  let cseleu = [325, 425, false];
-  let cselaf = [375, 600, false];
-  let cselas = [575, 475, false];
-
-  let route = ["sels"];
-  let places = {
-    0: "English",
-    1: "English",
-    2: "English",
-    3: "English",
-    4: "English",
-  };
-
-  let current = [csels[0], csels[1]];
-  let next = [csels[0], csels[1]];
-
-  let order = 0;
 
   sketch.preload = function () {
     map = sketch.loadImage("assets/map.png");
@@ -211,14 +222,11 @@ var languageSketch = function (sketch) {
     canvasLanguage.parent("map");
     sketch.background(map);
     sketch.textAlign(sketch.CENTER);
-    console.log("crea la canvas");
 
     let sels = sketch.createSelect();
     sels.parent("map");
     sels.position(csels[0], csels[1]);
     sels.option("English");
-
-    console.log("crea un select");
 
     let selsa = sketch.createSelect();
     selsa.parent("map");
@@ -239,11 +247,12 @@ var languageSketch = function (sketch) {
 
         cselsa[3] = order + 1;
         places[order + 1] = selsa.value();
+
+        sketch.mySelect();
       } else if (csels[2] == false) {
         places[cselsa[3]] = selsa.value();
       }
 
-      sketch.mySelect();
       selsa.disable("---");
     });
 
@@ -266,11 +275,12 @@ var languageSketch = function (sketch) {
 
         cseleu[3] = order + 1;
         places[order + 1] = seleu.value();
+
+        sketch.mySelect();
       } else if (csels[2] == false) {
         places[cseleu[3]] = seleu.value();
       }
 
-      sketch.mySelect();
       seleu.disable("---");
     });
 
@@ -293,11 +303,12 @@ var languageSketch = function (sketch) {
 
         cselaf[3] = order + 1;
         places[order + 1] = selaf.value();
+
+        sketch.mySelect();
       } else if (csels[2] == false) {
         places[cselaf[3]] = selaf.value();
       }
 
-      sketch.mySelect();
       selaf.disable("---");
     });
 
@@ -305,7 +316,7 @@ var languageSketch = function (sketch) {
     selas.parent("map");
     selas.position(cselas[0], cselas[1]);
     selas.option("---");
-    selas.option("Chinese");
+    selas.option("Chinese simpl");
     selas.option("Hindi");
     selas.option("Japanese");
     selas.option("Indonesian");
@@ -320,11 +331,12 @@ var languageSketch = function (sketch) {
 
         cselas[3] = order + 1;
         places[order + 1] = selas.value();
+
+        sketch.mySelect();
       } else if (csels[2] == false) {
         places[cselas[3]] = selas.value();
       }
 
-      sketch.mySelect();
       selas.disable("---");
     });
 
@@ -336,9 +348,6 @@ var languageSketch = function (sketch) {
       if (order >= 4 && csels[2] == false) {
         csels[2] = true;
         nextFrame();
-        // getElementById("language1").innerHTML = places[4];
-        // getElementById("phrase1").innerHTML = translatedPhrases[5];
-        // getElementById("phrase2").innerHTML = translatedPhrases[0];
         sketch.confirm();
       }
 
@@ -456,95 +465,156 @@ var languageSketch = function (sketch) {
         langs[i] = "ja";
       } else if (places[i] == "Indonesian") {
         langs[i] = "id";
+      } else if (places[i] == "Zulu") {
+        langs[i] = "zu";
       }
     }
     console.log(langs);
     console.log(places);
+
+    let nl = 0;
+
+    microsoft_translate(translatedPhrases[nl], langs[nl], langs[nl + 1]).then((data) => {
+      nl++;
+      translatedPhrases.push(data[0]["translations"][0]["text"]);
+      console.log(translatedPhrases[nl]);
+
+      microsoft_translate(translatedPhrases[nl], langs[nl], langs[nl + 1]).then((data) => {
+        nl++;
+        translatedPhrases.push(data[0]["translations"][0]["text"]);
+        console.log(translatedPhrases[nl]);
+
+        microsoft_translate(translatedPhrases[nl], langs[nl], langs[nl + 1]).then((data) => {
+          nl++;
+          translatedPhrases.push(data[0]["translations"][0]["text"]);
+          console.log(translatedPhrases[nl]);
+
+          microsoft_translate(translatedPhrases[nl], langs[nl], langs[nl + 1]).then((data) => {
+            nl++;
+            translatedPhrases.push(data[0]["translations"][0]["text"]);
+            console.log(translatedPhrases[nl]);
+
+            microsoft_translate(translatedPhrases[nl], langs[nl], langs[0]).then((data) => {
+              nl++;
+              translatedPhrases.push(data[0]["translations"][0]["text"]);
+              console.log(translatedPhrases);
+            });
+          });
+        });
+      });
+    });
   };
 };
 
-new p5(languageSketch);
+function startFrame4() {
+  new p5(languageSketch);
+}
 
 var translationSketch = function (sketch) {
   let shapes = [],
     alpha = 10,
     h = 30,
-    colore = false,
+    colored = false,
     opacity = 1,
-    opacity2 = 1,
-    comment = false,
-    translated = 0;
+    opacity2 = 1;
   sketch.setup = function () {
     let canvasTranslation = sketch.createCanvas(sketch.windowWidth, sketch.windowHeight);
     canvasTranslation.parent("animation");
-    let base = document.getElementById("analized").innerHTML;
-    for (let i = 1; i < 5; i++) {
-      console.log("sono nel for mamma");
-      microsoft_translate(translatedPhrases[i - 1], langs[i - 1], langs[i]).then((data) => {
-        console.log("sto traducendomi mamma");
-        const result = data[0]["translations"][0]["text"];
-        translatedPhrases.push(result);
-      });
+    document.getElementById("analized").innerHTML = phrase;
+
+    sketch.textSize(40);
+    sketch.textFont("Montserrat");
+    console.log(phrase);
+
+    words = phrase.split(" ");
+
+    const textOffset = sketch.width * 0.1;
+    let textX = textOffset;
+    const textEnd = sketch.width * 0.9;
+    let textY = sketch.height * 0.358;
+    words.forEach((element, index) => {
+      shapes.push(new Shape(textX, textY, sketch.textWidth(element), analysis[index]));
+
+      if (textX + sketch.textWidth(element) + 10 + sketch.textWidth(words[index + 1]) < textEnd) {
+        textX += sketch.textWidth(element) + 10;
+      } else {
+        textX = textOffset;
+        textY += 100;
+      }
+    });
+  };
+
+  sketch.draw = function () {
+    if (opacity <= 300) {
+      for (let k = 0; k < shapes.length; k++) {
+        shapes[k].create();
+      }
+      opacity++;
+    } else if (h < 60) {
+      alpha = 255;
+      for (let l = 0; l < shapes.length; l++) {
+        shapes[l].create();
+      }
+      h++;
+      document.getElementById("analized").style.visibility = "hidden";
+      document.getElementById("comments").innerHTML = "Adding a context to each word";
+    } else if (opacity2 <= 300) {
+      colored = true;
+      alpha = 5;
+
+      setTimeout(function () {
+        for (let n = 0; n < shapes.length; n++) {
+          shapes[n].create();
+        }
+        opacity2++;
+        if (opacity2 > 50 && opacity2 < 200) {
+          alpha = 10;
+        } else if (opacity2 > 200) {
+          alpha = 5;
+        }
+        document.getElementById("comments").innerHTML = "Saving the informations";
+      }, 2000);
+      animationEnded = true;
+    } else if (animationEnded == true) {
+      sketch.showingTranslation();
+      animationEnded = false;
     }
   };
 
-  console.log(translatedPhrases);
-  // words = translatedPhrases[0].split(" ");
-  // console.log(words);
-  // for (let i = 0; i < words.length; i++) {
-  //   shapes.push(new Shape(base.getBoundingClientRect().x, base.getBoundingClientRect().y, sketch.textWidth(words[i]), analyze[i]));
-  //   console.log(shapes);
-  // // }
-  // noStroke();
-};
-sketch.draw = function () {
-  if (opacity <= 300) {
-    for (let k = 0; k < shapes.length; k++) {
-      shapes[k].create();
+  sketch.showingTranslation = function () {
+    for (let i = 0; i < 4; i++) {
+      setTimeout(function () {
+        console.log(places[i]);
+        document.getElementById("language").innerHTML = places[i];
+        document.getElementById("translated").innerHTML = translatedPhrases[i];
+      }, 2000);
     }
-    opacity++;
-  } else if (h < 60) {
-    alpha = 255;
-    for (let l = 0; l < shapes.length; l++) {
-      shapes[l].create();
+    shownTranslations++;
+    document.getElementById("language1").innerHTML = places[4];
+    document.getElementById("phrase1").innerHTML = translatedPhrases[4];
+    microsoft_translate(translatedPhrases[4], langs[4], "en").then((data) => {
+      startCheck = data[0]["translations"][0]["text"];
+      document.getElementById("phrase2").innerHTML = startCheck;
+    });
+    document.getElementById("map").addEventListener("click", nextFrame);
+    document.getElementById("startingPhrase").innerHTML = phrase;
+    document.getElementById("landingPhrase").innerHTML = startCheck;
+  };
+
+  class Shape {
+    constructor(posX, posY, size, category) {
+      this.x = posX;
+      this.y = posY;
+      this.w = size;
+      this.c = category;
     }
-    h++;
-    //al posto di 60 metto l'altezza per 2
-    document.getElementById("comments").innerHTML = "Adding a context to each word";
-  } else if (opacity2 <= 255) {
-    alpha = 10;
-    colore = true;
-    setTimeout(function () {
-      for (let n = 0; n < shapes.length; n++) {
-        shapes[n].create();
+
+    create() {
+      sketch.noStroke();
+      if (colored == false) {
+        sketch.fill(255, 255, 255, alpha);
       }
-
-      opacity2++;
-      document.getElementById("comments").innerHTML = "Categorizing each word";
-    }, 2000);
-  } else if (translated < translatedPhrases.lenght) {
-    setTimeout(function () {
-      getElementById("language").innerHTML = languageNames;
-      getElementById("translated").innerHTML = translatedPhrases[translated];
-      translated++;
-    }, 3000);
-  } else {
-    nextFrame();
-  }
-};
-
-class Shape {
-  constructor(posX, posY, size, category) {
-    this.x = posX;
-    this.y = posY;
-    this.w = size;
-    this.c = category;
-  }
-
-  create() {
-    if (colore == false) {
-      sketch.fill(255, 255, 255, alpha);
-      if (colore == true) {
+      if (colored == true) {
         if (this.c == "cd") {
           sketch.fill(191, 184, 224, alpha);
         } else if (this.c == "dt") {
@@ -566,6 +636,8 @@ class Shape {
       sketch.rect(this.x, this.y, this.w, h, 7);
     }
   }
-}
+};
 
-new p5(translationSketch);
+function startFrame5() {
+  new p5(translationSketch);
+}

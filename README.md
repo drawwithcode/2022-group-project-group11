@@ -4,7 +4,7 @@
 
 ### a. Theme
 
-### b. Aim / goal
+### b. Aim
 
 ### c. Concept
 
@@ -14,9 +14,9 @@
 
 ## 3. [CODE](#code)
 
-### a. Speech recognition
+### a. Translator API
 
-### b. Translator API
+### b. Speech recognition
 
 ### c. Syntax analysis
 
@@ -24,7 +24,7 @@
 
 ## 4. [TEAM](#team)
 
-![](./assets-readme/looptext.gif)
+![](./assets/readme/title_2.png)
 
 # PROJECT IDEA
 
@@ -51,6 +51,8 @@ The device will need to have touch functionalities and a microphone of course, b
 
 ![scheme](./assets/readme/struttura.png)
 
+Here is a scheme of the project and its concept rendition.
+
 The project is composed of a single HTML page, in which the various parts are set to go off based on timers and the interaction of the user with a button and some drop-down menus.
 
 1. The introduction page invites the user to press the big button on the screen;
@@ -60,12 +62,6 @@ The project is composed of a single HTML page, in which the various parts are se
 
 # CODE
 
-**SPEECH RECOGNITION**
-
-[p5 speech](https://idmnyu.github.io/p5.js-speech/) was implemented for speech recognition.
-
-The library is able to detect quite a few languages, even if we only needed english.
-
 **TRANSLATOR API**
 
 We implemented [Azure translator API](https://azure.microsoft.com/it-it/products/cognitive-services/translator) for the process of translating our main phrase.
@@ -73,22 +69,80 @@ We implemented [Azure translator API](https://azure.microsoft.com/it-it/products
 The implementation is rather short but complicated
 
 ```JavaScript
+const translate_api_endpoint = "https://api.cognitive.microsofttranslator.com";
+let translate_api_key = "fabd1ff9c0e94348ab8e9dcbb0c28444";
+const translate_version      = "3.0";
+const translate_region       = "switzerlandnorth";
 
+let sentence = "Phrase we need to translate";
+
+async function microsoft_translate(source_text, source_language, target_language) { //using an asyncronous function, that will request the data and wait for it to be sent back, without stopping the code from running
+  const endpoint = `${translate_api_endpoint}/translate?api-version=${translate_version}&from=${source_language}&to=${target_language}`; // Constructing the URL to send to
+  const data_body = [{'text': source_text}]; // Constructing the data to be sent
+  const response = await fetch(endpoint, {
+    method: 'POST', // We will use POST to send this data to the end point
+    mode: 'cors', // CORS is a security feature that only allows requests to/from the same site, in this case because we're sending data to an external site we will turn it off
+    cache: 'no-cache', // We will disable caching so that we will always get the "fresh" response from the server
+    headers: {
+      'Content-Type': 'application/json',
+      'Ocp-Apim-Subscription-Key': translate_api_key,
+      'Ocp-Apim-Subscription-Region': translate_region
+    },
+    body: JSON.stringify(data_body)
+  });
+  return response.json(); // parse json response into a javascript object and return
+}
 ```
 
-and then we use it to translate
+The process of translating works like this
 
 ```JavaScript
-
+microsoft_translate(sentence, starting_lang, lang_to_translate_to).then((data) => {
+    result = data[0]['translations'][0]['text'];
+    console.log(result);
+});
 ```
 
-![](./assets-readme/blob_avvicinano.gif)
+We couldnt name the function "translate()" using instead "microsoft_translate()" to avoid conflict with the preexisting p5js function.
+
+**SPEECH RECOGNITION**
+
+[p5 speech](https://idmnyu.github.io/p5.js-speech/) was implemented for speech recognition; the library has a lot of different functionalities, however we only needed that.
 
 **SYNTAX ANALISIS**
 
-To analize and recognize the elements of a phrase, we used [RiTa.js](https://github.com/dhowe/ritajs), a library that allows a great quantity of operations and analysis on a sentence, related to grammar and syntax.
+To analize and recognize the elements of a phrase, we used [RiTa.js](https://github.com/dhowe/ritajs), a library that allows a great quantity of analysis on sentences.
 
-The implementation works like this
+We were mainly interested in the function
+
+```JavaScript
+let words = RiTa.pos(phrase);
+```
+
+This is how the two libraries work together
+
+```JavaScript
+  sketch.recording = function () {
+    if (frame == 3 && control == false) {
+      control = true;
+      clicked = true;
+      sketch.speechRec.start(); //The recording starts
+    }
+  };
+
+  sketch.gotSpeech = function () { //Once it ends, we check the phrase's length and start the analysis
+    if (sketch.speechRec.resultValue) {
+      let said = sketch.speechRec.resultString;
+      if (said.length <= 7) {
+        phrase = said;
+      } else {
+        phrase = said.split(" ").splice(0, 7).join(" ");
+      }
+      analysis = RiTa.pos(phrase);
+      clicked = false;
+    }
+  }
+```
 
 **ANIMATIONS**
 
@@ -104,7 +158,7 @@ For the world map animations, we used a sligtly more complex system, mostly just
 
 ```
 
-To manage the texts appearing in the various parts of the experience, we implemented a CSS file; both the dissolving transitions in the centre of the screen and the scrolling transitions on the top and the bottom of the page are handled though the [style.css](./public/style.css).
+To give the selection menus and buttons a certain style, we implemented a [CSS file](./style.css).
 
 # TEAM
 
