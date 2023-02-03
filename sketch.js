@@ -60,18 +60,22 @@ function nextFrame() {
     document.getElementById("start").style.display = "none";
     document.getElementById("translation").style.visibility = "visible";
     document.getElementById("animation").style.visibility = "visible";
+    document.getElementById("reverseButton").style.visibility = "visible";
     frame++;
   } else if (frame == 6) {
+    document.getElementById("reverseButton").innerHTML = "Compare";
     document.getElementById("translation").style.display = "none";
     document.getElementById("animation").style.display = "none";
     document.getElementById("map").style.visibility = "visible";
     frame++;
     console.log(frame);
   } else if (frame == 7) {
+    document.getElementById("reverseButton").innerHTML = "Continue";
     document.getElementById("map").style.visibility = "hidden";
     document.getElementById("reverse").style.visibility = "visible";
     frame++;
   } else if (frame == 8) {
+    document.getElementById("reverseButton").style.visibility = "hidden";
     document.getElementById("reverse").style.visibility = "hidden";
     document.getElementById("recap").style.visibility = "visible";
   }
@@ -582,23 +586,19 @@ var translationSketch = function (sketch) {
   };
 
   sketch.showingTranslation = function () {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 1; i < 5; i++) {
       setTimeout(function () {
         console.log(places[i]);
         document.getElementById("language").innerHTML = places[i];
         document.getElementById("translated").innerHTML = translatedPhrases[i];
-      }, 2000);
+      }, 2000 + 2000 * (i - 1));
     }
     shownTranslations++;
     document.getElementById("language1").innerHTML = places[4];
     document.getElementById("phrase1").innerHTML = translatedPhrases[4];
-    microsoft_translate(translatedPhrases[4], langs[4], "en").then((data) => {
-      startCheck = data[0]["translations"][0]["text"];
-      document.getElementById("phrase2").innerHTML = startCheck;
-    });
     document.getElementById("map").addEventListener("click", nextFrame);
     document.getElementById("startingPhrase").innerHTML = phrase;
-    document.getElementById("landingPhrase").innerHTML = startCheck;
+    document.getElementById("landingPhrase").innerHTML = translatedPhrases[5];
   };
 
   class Shape {

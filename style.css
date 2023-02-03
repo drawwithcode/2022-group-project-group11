@@ -272,3 +272,12 @@ select {
 #animation {
   z-index: 700;
 }
+
+#reverseButton {
+  background-color: white;
+  color: #7ec384;
+  margin-left: 38%;
+  position: fixed;
+  margin-top: 125%;
+  visibility: hidden;
+}

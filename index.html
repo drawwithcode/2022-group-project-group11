@@ -80,28 +80,32 @@
       <button type="button" id="info" onclick="openLegend()">Legend</button>
       <div id="fistLanguage">
         <div style="margin-top: 10%; margin-bottom: 0"><h3>ENGLISH</h3></div>
-        <div><p id="starting" style="margin-top: 7%; text-align: left"></p></div>
-        <div><p id="analized" style="margin-top: 7%; text-align: left; line-height: 100px; vertical-align: text-top"></p></div>
-        <div><p id="comments" style="margin-top: 10%">Analising your sentence</p></div>
+        <div><p id="starting" style="margin-top: 5%; text-align: left"></p></div>
+        <div><p id="analized" style="margin-top: 7%; text-align: left; line-height: 100px; vertical-align: text-top; text-transform: lowercase"></p></div>
+        <div><p id="comments" style="margin-top: 5%; text-transform: lowercase">Analising your sentence</p></div>
       </div>
-      <div id="secondLanguage" onclick="nextFrame()">
-        <div id="language"><h3 style="margin-top: 10%; margin-bottom: 0; text-transform: uppercase">LANGUAGE</h3></div>
-        <div><p id="translated" style="margin-top: 7%"></p></div>
+      <div id="secondLanguage">
+        <div>
+          <h3 id="language" style="margin-top: 7%; margin-bottom: 0; text-transform: uppercase">LANGUAGE</h3>
+          <p id="translated" style="margin-top: 5%"></p>
+        </div>
       </div>
     </div>
+    <button type="button" id="reverseButton" onclick="nextFrame()">Continue</button>
     <div id="reverse" onclick="nextFrame()">
-      <div><h3 id="language1" style="margin-top: 35%; text-transform: uppercase">LANGUAGE</h3></div>
-      <div><p id="phrase1">phrase that has been transalted</p></div>
+      <div style="margin-top: 7%"><h2>REVERSE</br>THE PROCESS</h2></div>
+      <div><h3 id="language1" style="margin-top: 17%; text-transform: uppercase">LANGUAGE</h3></div>
+      <div><p id="phrase1">Phrase that has been transalted</p></div>
 
-      <div style="margin-top: 30%"><h3 id="language2">ENGLISH</h3></div>
-      <div><p id="phrase2">phrase that has been transalted</p></div>
+      <div style="margin-top: 17%"><h3 id="language2">ENGLISH</h3></div>
+      <div><p id="phrase2" style="text-transform: lowercase">Phrase that has been transalted</p></div>
     </div>
     <div id="recap">
       <h2 style="margin-top: 25%">HOW MUCH HAS CHANGED?</h2>
       <h3 style="text-align: left; margin-left: 10%; margin-bottom: 3%; margin-top: 15%">Starting phrase</h3>
-      <p id="startingPhrase" style="text-align: left; margin-top: 0%">Something as a placeholder</p>
+      <p id="startingPhrase" style="text-align: left; margin-top: 0%; text-transform: lowercase">Something as a placeholder</p>
       <h3 style="text-align: left; margin-left: 10%; margin-bottom: 3%; margin-top: 10%">Landing phrase</h3>
-      <p id="landingPhrase" style="text-align: left; margin-top: 0%">Something a place holder</p>
+      <p id="landingPhrase" style="text-align: left; margin-top: 0%; text-transform: lowercase">Something a place holder</p>
     </div>
     <!-- <script src="main.js"></script> -->
   </body>
