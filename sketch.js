@@ -181,7 +181,7 @@ var recordSketch = function (sketch) {
 
       document.getElementById("phrase").innerHTML = phrase;
       document.getElementById("starting").innerHTML = phrase;
-      translatedPhrases.push(phrase);
+      translatedPhrases[0] = phrase;
       nextFrame();
       //gliene metto alcune solo per simulare come sarà
     }
@@ -532,10 +532,10 @@ var translationSketch = function (sketch) {
 
     words = phrase.split(" ");
 
-    const textOffset = sketch.width * 0.1;
+    const textOffset = sketch.width * 0.098;
     let textX = textOffset;
     const textEnd = sketch.width * 0.9;
-    let textY = sketch.height * 0.358;
+    let textY = sketch.height * 0.348;
     words.forEach((element, index) => {
       shapes.push(new Shape(textX, textY, sketch.textWidth(element), analysis[index]));
 
@@ -599,6 +599,7 @@ var translationSketch = function (sketch) {
     document.getElementById("map").addEventListener("click", nextFrame);
     document.getElementById("startingPhrase").innerHTML = phrase;
     document.getElementById("landingPhrase").innerHTML = translatedPhrases[5];
+    document.getElementById("phrase2").innerHTML = translatedPhrases[5];
   };
 
   class Shape {
