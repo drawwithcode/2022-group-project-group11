@@ -117,7 +117,7 @@ var recordSketch = function (sketch) {
     bg;
 
   sketch.preload = function () {
-    bg = sketch.loadImage("/assets/background.png");
+    bg = sketch.loadImage("assets/background.png");
   };
 
   sketch.setup = function () {
